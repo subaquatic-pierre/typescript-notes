@@ -4,37 +4,78 @@ const testCreateUser = () => {
   const user = new User({ name: "Peter Pan", age: 18 });
 
   const name = user.get("name");
+  const age = user.get("age");
 
   console.log(`User name is ${name}`);
-  console.log(`User in memory age ${user.get("age")}`);
+  console.log(`User in memory age ${age}`);
+};
+
+const testSaveNewUser = async () => {
+  const user = new User({ name: "Peter Pan", age: 18 });
 
   console.log("Saving user ...");
   user.save();
 
-  setTimeout(() => {
-    console.log("Fetching user from database ...");
-    user.fetch();
-  }, 1000);
-  setTimeout(() => {
-    console.log("Updating user age...");
-    user.set({ age: 400 });
-    console.log("Saving user ...");
-    user.fetch();
-    const newAge = user.get("age");
-    console.log(`New user age ${newAge}`);
-    // user.delete();
-  }, 1000);
+  console.log("User successfully saved");
 };
 
-const testSaveUser = () => {};
+const testSaveExistingUser = async () => {
+  const user = new User({ id: 1, name: "Peter Pan", age: 18 });
 
-const testUpdateUser = () => {};
+  console.log("Saving user ...");
+  user.save();
 
-const testDeleteUser = () => {};
+  console.log("User successfully saved");
+  user.delete();
+};
+
+const testUpdateUser = () => {
+  const user = new User({ name: "Peter Pan", age: 18 });
+  console.log("Saving user ...");
+
+  console.log(`The current username is ${user.get("name")}`);
+  console.log("Updating username");
+
+  user.set({ name: "Updated username" });
+
+  const newName = user.get("name");
+
+  console.log(`New username is ${newName}`);
+};
+
+const testFetchUser = async () => {
+  const user = new User({ name: "Peter Pan", age: 18 });
+
+  console.log("Saving user ...");
+  await user.save();
+
+  console.log("Fetching user ");
+  user.fetch();
+
+  console.log("User successfully fetched");
+
+  await user.delete();
+};
+
+const testDeleteUser = () => {
+  const user = new User({ name: "Peter Pan", age: 18 });
+
+  console.log("Saving user ...");
+  user.save();
+
+  console.log("Fetching user ");
+  user.fetch();
+  console.log("User successfully fetched");
+
+  user.delete();
+  console.log("User successfully deleted");
+};
 
 export default {
-  testSaveUser,
-  testCreateUser,
-  testUpdateUser,
-  testDeleteUser,
+  // testCreateUser,
+  // testSaveNewUser,
+  // testSaveExistingUser,
+  // testUpdateUser,
+  // testFetchUser,
+  // testDeleteUser,
 };

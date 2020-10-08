@@ -47,6 +47,7 @@ export class User {
     this.sync
       .fetch(id)
       .then((res: AxiosResponse): void => {
+        console.log(res.data);
         this.set(res.data);
       })
       .catch((err) => {
@@ -58,11 +59,29 @@ export class User {
     const data = this.attrs.getAll();
     this.sync
       .save(data)
-      .then(() => {
+      .then((res: AxiosResponse) => {
+        console.log(res.data);
+        this.set(res.data);
         this.trigger("save");
       })
       .catch(() => {
         this.trigger("error");
       });
+  };
+
+  delete = () => {
+    const id = this.get("id");
+    if (!id) {
+      console.log("The user does not exists in the database");
+    } else {
+      this.sync
+        .delete(id)
+        .then((res: AxiosResponse) => {
+          console.log("User successfully deleted from the database");
+        })
+        .catch((err) => {
+          console.log(err.message);
+        });
+    }
   };
 }
