@@ -6,7 +6,7 @@ interface HasID {
 
 export class Sync<T extends HasID> {
   constructor(public url: string) {}
-  fetch(id: keyof T): AxiosPromise {
+  fetch(id: number): AxiosPromise {
     return axios.get(`${this.url}/${id}`);
   }
 
@@ -19,7 +19,7 @@ export class Sync<T extends HasID> {
     }
   };
 
-  delete = (id: keyof T): AxiosPromise => {
+  delete = (id: number): AxiosPromise => {
     return axios.delete(`${this.url}/${id}`);
   };
 }

@@ -9,4 +9,8 @@ export class Attributes<T> {
     const newData = { ...this.data, ...updateData };
     this.data = newData;
   };
+
+  getAll = (): T => {
+    return this.data;
+  };
 }
