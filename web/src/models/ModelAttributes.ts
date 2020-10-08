@@ -1,4 +1,4 @@
-export class Attributes<T> {
+export class ModelAttributes<T> {
   constructor(public data: T) {}
 
   get = <K extends keyof T>(key: K): T[K] => {

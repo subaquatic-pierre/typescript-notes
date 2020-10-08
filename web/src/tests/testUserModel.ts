@@ -11,7 +11,7 @@ const testCreateUser = () => {
 };
 
 const testSaveNewUser = async () => {
-  const user = new User({ name: "Peter Pan", age: 18 });
+  const user = User.buildUser({ name: "Peter Pan", age: 18 });
 
   console.log("Saving user ...");
   user.save();
@@ -73,7 +73,7 @@ const testDeleteUser = () => {
 
 export default {
   // testCreateUser,
-  // testSaveNewUser,
+  testSaveNewUser,
   // testSaveExistingUser,
   // testUpdateUser,
   // testFetchUser,

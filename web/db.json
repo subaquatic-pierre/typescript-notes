@@ -1,3 +1,19 @@
 {
-  "users": []
+  "users": [
+    {
+      "name": "Peter Pan",
+      "age": 18,
+      "id": 1
+    },
+    {
+      "name": "Peter Pan",
+      "age": 18,
+      "id": 2
+    },
+    {
+      "name": "Peter Pan",
+      "age": 18,
+      "id": 3
+    }
+  ]
 }

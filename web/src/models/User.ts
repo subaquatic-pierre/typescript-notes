@@ -1,87 +1,28 @@
-import { AxiosResponse } from "axios";
 import { DB_URL } from "../constants";
-import { Attributes } from "./Attributes";
+import { ModelAttributes } from "./ModelAttributes";
 import { Eventing } from "./Eventing";
-import { Sync } from "./Sync";
+import { ApiSync } from "./ApiSync";
+import { Model } from "./Model";
+import { Collection } from "./Collection";
 
-interface UserProps {
+export interface UserProps {
   name?: string;
   age?: number;
   id?: number;
 }
 
-export type Callback = () => void;
-
-export class User {
-  events: Eventing = new Eventing();
-  sync: Sync<UserProps> = new Sync<UserProps>(`${DB_URL}/users`);
-  attrs: Attributes<UserProps>;
-
-  constructor(public data: UserProps) {
-    this.attrs = new Attributes<UserProps>(data);
+export class User extends Model<UserProps> {
+  static buildUser(attrs: UserProps): User {
+    return new User(
+      new Eventing(),
+      new ApiSync<UserProps>(`${DB_URL}/users`),
+      new ModelAttributes<UserProps>(attrs)
+    );
   }
 
-  get on() {
-    return this.events.on;
+  static buildUserCollection(): Collection<User, UserProps> {
+    return new Collection(`${DB_URL}/users`, (json) => {
+      return this.buildUser(json);
+    });
   }
-
-  get trigger() {
-    return this.events.trigger;
-  }
-
-  get get() {
-    return this.attrs.get;
-  }
-
-  set = (updateData: UserProps): void => {
-    this.attrs.set(updateData);
-    this.trigger("change");
-  };
-
-  fetch = (): void => {
-    const id = this.attrs.get("id") || undefined;
-    if (!id) {
-      throw new Error("Cannot fetch User without an ID");
-    }
-
-    this.sync
-      .fetch(id)
-      .then((res: AxiosResponse): void => {
-        console.log(res.data);
-        this.set(res.data);
-      })
-      .catch((err) => {
-        throw new Error(err.message);
-      });
-  };
-
-  save = (): void => {
-    const data = this.attrs.getAll();
-    this.sync
-      .save(data)
-      .then((res: AxiosResponse) => {
-        console.log(res.data);
-        this.set(res.data);
-        this.trigger("save");
-      })
-      .catch(() => {
-        this.trigger("error");
-      });
-  };
-
-  delete = () => {
-    const id = this.get("id");
-    if (!id) {
-      console.log("The user does not exists in the database");
-    } else {
-      this.sync
-        .delete(id)
-        .then((res: AxiosResponse) => {
-          console.log("User successfully deleted from the database");
-        })
-        .catch((err) => {
-          console.log(err.message);
-        });
-    }
-  };
 }
