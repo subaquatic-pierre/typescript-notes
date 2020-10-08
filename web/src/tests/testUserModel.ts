@@ -1,6 +1,6 @@
 import { User } from "../models/User";
 
-export function testUser(): void {
+const testCreateUser = () => {
   const user = new User({ name: "Peter Pan", age: 18 });
 
   const name = user.get("name");
@@ -24,4 +24,17 @@ export function testUser(): void {
     console.log(`New user age ${newAge}`);
     // user.delete();
   }, 1000);
-}
+};
+
+const testSaveUser = () => {};
+
+const testUpdateUser = () => {};
+
+const testDeleteUser = () => {};
+
+export default {
+  testSaveUser,
+  testCreateUser,
+  testUpdateUser,
+  testDeleteUser,
+};

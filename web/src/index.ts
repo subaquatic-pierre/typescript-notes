@@ -1,3 +1,1 @@
-import { testUser } from "./tests/test_UserModel";
-
-testUser();
+import userTests from "./tests/testUserModel";
