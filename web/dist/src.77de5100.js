@@ -117,46 +117,22 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"views/UserForm.ts":[function(require,module,exports) {
+})({"views/View.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.UserForm = void 0;
+exports.View = void 0;
 
-var UserForm =
+var View =
 /** @class */
 function () {
-  function UserForm(parent, model) {
+  function View(parent) {
     var _this = this;
 
     this.parent = parent;
-    this.model = model;
-
-    this.registerChangeListener = function () {
-      _this.model.on("change", _this.render);
-    };
-
-    this.setAgeButtonClick = function () {
-      var age = _this.model.generateRandomAge();
-
-      _this.model.set({
-        age: age
-      });
-    };
-
-    this.setNameButtonClick = function () {
-      var inputBox = _this.parent.querySelector(".input-box");
-
-      var name = inputBox.value;
-
-      if (name) {
-        _this.model.set({
-          name: name
-        });
-      }
-    };
+    this.regions = {};
 
     this.bindEvents = function (fragment) {
       var eventsMap = _this.eventsMap();
@@ -171,10 +147,21 @@ function () {
         });
       };
 
-      for (var _i = 0, _a = Object.keys(eventsMap); _i < _a.length; _i++) {
-        var keyString = _a[_i];
-
+      for (var keyString in eventsMap) {
         _loop_1(keyString);
+      }
+    };
+
+    this.mapRegions = function (fragment) {
+      var regionsMap = _this.regionsMap();
+
+      for (var key in regionsMap) {
+        var selector = regionsMap[key];
+        var element = fragment.querySelector(selector);
+
+        if (element) {
+          _this.regions[key] = element;
+        }
       }
     };
 
@@ -188,28 +175,347 @@ function () {
 
       _this.bindEvents(template.content);
 
+      _this.mapRegions(template.content);
+
+      _this.onRender();
+
+      _this.parent.appendChild(template.content);
+    };
+  }
+
+  View.prototype.onRender = function () {};
+
+  View.prototype.regionsMap = function () {
+    return {};
+  };
+
+  View.prototype.eventsMap = function () {
+    return {};
+  };
+
+  return View;
+}();
+
+exports.View = View;
+},{}],"views/ModelView.ts":[function(require,module,exports) {
+"use strict";
+
+var __extends = this && this.__extends || function () {
+  var _extendStatics = function extendStatics(d, b) {
+    _extendStatics = Object.setPrototypeOf || {
+      __proto__: []
+    } instanceof Array && function (d, b) {
+      d.__proto__ = b;
+    } || function (d, b) {
+      for (var p in b) {
+        if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p];
+      }
+    };
+
+    return _extendStatics(d, b);
+  };
+
+  return function (d, b) {
+    _extendStatics(d, b);
+
+    function __() {
+      this.constructor = d;
+    }
+
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+  };
+}();
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.ModelView = void 0;
+
+var View_1 = require("./View");
+
+var ModelView =
+/** @class */
+function (_super) {
+  __extends(ModelView, _super);
+
+  function ModelView(parent, model) {
+    var _this = _super.call(this, parent) || this;
+
+    _this.parent = parent;
+    _this.model = model;
+    _this.regions = {};
+
+    _this.bindModelOnChangeListener = function () {
+      _this.model.on("change", _this.render);
+    };
+
+    _this.bindEvents = function (fragment) {
+      var eventsMap = _this.eventsMap();
+
+      var _loop_1 = function _loop_1(keyString) {
+        var _a = keyString.split(":"),
+            event = _a[0],
+            selector = _a[1];
+
+        fragment.querySelectorAll(selector).forEach(function (element) {
+          element.addEventListener(event, eventsMap[keyString]);
+        });
+      };
+
+      for (var keyString in eventsMap) {
+        _loop_1(keyString);
+      }
+    };
+
+    _this.mapRegions = function (fragment) {
+      var regionsMap = _this.regionsMap();
+
+      for (var key in regionsMap) {
+        var selector = regionsMap[key];
+        var element = fragment.querySelector(selector);
+
+        if (element) {
+          _this.regions[key] = element;
+        }
+      }
+    };
+
+    _this.render = function () {
+      _this.parent.innerHTML = "";
+
+      var html = _this.template();
+
+      var template = document.createElement("template");
+      template.innerHTML = html;
+
+      _this.bindEvents(template.content);
+
+      _this.mapRegions(template.content);
+
+      _this.onRender();
+
       _this.parent.appendChild(template.content);
     };
 
-    this.registerChangeListener();
+    _this.bindModelOnChangeListener();
+
+    return _this;
+  }
+
+  return ModelView;
+}(View_1.View);
+
+exports.ModelView = ModelView;
+},{"./View":"views/View.ts"}],"views/UserShow.ts":[function(require,module,exports) {
+"use strict";
+
+var __extends = this && this.__extends || function () {
+  var _extendStatics = function extendStatics(d, b) {
+    _extendStatics = Object.setPrototypeOf || {
+      __proto__: []
+    } instanceof Array && function (d, b) {
+      d.__proto__ = b;
+    } || function (d, b) {
+      for (var p in b) {
+        if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p];
+      }
+    };
+
+    return _extendStatics(d, b);
+  };
+
+  return function (d, b) {
+    _extendStatics(d, b);
+
+    function __() {
+      this.constructor = d;
+    }
+
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+  };
+}();
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.UserShow = void 0;
+
+var ModelView_1 = require("./ModelView");
+
+var UserShow =
+/** @class */
+function (_super) {
+  __extends(UserShow, _super);
+
+  function UserShow() {
+    return _super !== null && _super.apply(this, arguments) || this;
+  }
+
+  UserShow.prototype.template = function () {
+    return "\n    <div>\n        <h1>User Name: " + this.model.get("name") + "\n        <h1>Age: " + this.model.get("age") + "\n    </div>\n    ";
+  };
+
+  return UserShow;
+}(ModelView_1.ModelView);
+
+exports.UserShow = UserShow;
+},{"./ModelView":"views/ModelView.ts"}],"views/UserForm.ts":[function(require,module,exports) {
+"use strict";
+
+var __extends = this && this.__extends || function () {
+  var _extendStatics = function extendStatics(d, b) {
+    _extendStatics = Object.setPrototypeOf || {
+      __proto__: []
+    } instanceof Array && function (d, b) {
+      d.__proto__ = b;
+    } || function (d, b) {
+      for (var p in b) {
+        if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p];
+      }
+    };
+
+    return _extendStatics(d, b);
+  };
+
+  return function (d, b) {
+    _extendStatics(d, b);
+
+    function __() {
+      this.constructor = d;
+    }
+
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+  };
+}();
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.UserForm = void 0;
+
+var ModelView_1 = require("./ModelView");
+
+var UserForm =
+/** @class */
+function (_super) {
+  __extends(UserForm, _super);
+
+  function UserForm() {
+    var _this = _super !== null && _super.apply(this, arguments) || this;
+
+    _this.onSetAgeClick = function () {
+      var age = _this.model.generateRandomAge();
+
+      _this.model.set({
+        age: age
+      });
+    };
+
+    _this.onSaveClick = function () {
+      _this.model.save();
+    };
+
+    _this.onSetNameClick = function () {
+      var inputBox = _this.parent.querySelector(".input-box");
+
+      var name = inputBox.value;
+
+      if (name) {
+        _this.model.set({
+          name: name
+        });
+      }
+    };
+
+    return _this;
   }
 
   UserForm.prototype.eventsMap = function () {
     return {
-      "click:.set-age": this.setAgeButtonClick,
-      "click:.set-name": this.setNameButtonClick
+      "click:.set-age": this.onSetAgeClick,
+      "click:.set-name": this.onSetNameClick,
+      "click:.save": this.onSaveClick
     };
   };
 
   UserForm.prototype.template = function () {
-    return "\n        <h1>\n        User from\n        </h1>\n        <h2>User Name: " + this.model.get("name") + "</h2>\n        <h2>Age: " + this.model.get("age") + "</h2>\n        <input class='input-box' type='text' placeholder='Please enter your name' />\n        <button class='set-name'>Set new Name</button>\n        <button class='set-age'>Generate Random Age</button>\n        ";
+    return "\n      <div>\n        <input class='input-box' type='text' placeholder='Please enter your name' />\n        <button class='set-name'>Set new Name</button>\n        <button class='set-age'>Generate Random Age</button>\n        <button class='save'>Save User</button>\n      </div>\n        ";
   };
 
   return UserForm;
-}();
+}(ModelView_1.ModelView);
 
 exports.UserForm = UserForm;
-},{}],"constants.ts":[function(require,module,exports) {
+},{"./ModelView":"views/ModelView.ts"}],"views/UserEdit.ts":[function(require,module,exports) {
+"use strict";
+
+var __extends = this && this.__extends || function () {
+  var _extendStatics = function extendStatics(d, b) {
+    _extendStatics = Object.setPrototypeOf || {
+      __proto__: []
+    } instanceof Array && function (d, b) {
+      d.__proto__ = b;
+    } || function (d, b) {
+      for (var p in b) {
+        if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p];
+      }
+    };
+
+    return _extendStatics(d, b);
+  };
+
+  return function (d, b) {
+    _extendStatics(d, b);
+
+    function __() {
+      this.constructor = d;
+    }
+
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+  };
+}();
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.UserEdit = void 0;
+
+var UserShow_1 = require("./UserShow");
+
+var UserForm_1 = require("./UserForm");
+
+var ModelView_1 = require("./ModelView");
+
+var UserEdit =
+/** @class */
+function (_super) {
+  __extends(UserEdit, _super);
+
+  function UserEdit() {
+    return _super !== null && _super.apply(this, arguments) || this;
+  }
+
+  UserEdit.prototype.regionsMap = function () {
+    return {
+      userShow: ".user-show",
+      userForm: ".user-form"
+    };
+  };
+
+  UserEdit.prototype.onRender = function () {
+    new UserShow_1.UserShow(this.regions.userShow, this.model).render();
+    new UserForm_1.UserForm(this.regions.userForm, this.model).render();
+  };
+
+  UserEdit.prototype.template = function () {
+    return "\n        <div class='user-show'></div>\n        <div class='user-form'></div>\n        ";
+  };
+
+  return UserEdit;
+}(ModelView_1.ModelView);
+
+exports.UserEdit = UserEdit;
+},{"./UserShow":"views/UserShow.ts","./UserForm":"views/UserForm.ts","./ModelView":"views/ModelView.ts"}],"constants.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -2355,24 +2661,83 @@ function (_super) {
 }(Model_1.Model);
 
 exports.User = User;
-},{"../constants":"constants.ts","./ModelAttributes":"models/ModelAttributes.ts","./Eventing":"models/Eventing.ts","./ApiSync":"models/ApiSync.ts","./Model":"models/Model.ts","./Collection":"models/Collection.ts"}],"index.ts":[function(require,module,exports) {
+},{"../constants":"constants.ts","./ModelAttributes":"models/ModelAttributes.ts","./Eventing":"models/Eventing.ts","./ApiSync":"models/ApiSync.ts","./Model":"models/Model.ts","./Collection":"models/Collection.ts"}],"views/Menu.ts":[function(require,module,exports) {
+"use strict";
+
+var __extends = this && this.__extends || function () {
+  var _extendStatics = function extendStatics(d, b) {
+    _extendStatics = Object.setPrototypeOf || {
+      __proto__: []
+    } instanceof Array && function (d, b) {
+      d.__proto__ = b;
+    } || function (d, b) {
+      for (var p in b) {
+        if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p];
+      }
+    };
+
+    return _extendStatics(d, b);
+  };
+
+  return function (d, b) {
+    _extendStatics(d, b);
+
+    function __() {
+      this.constructor = d;
+    }
+
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+  };
+}();
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.MenuView = void 0;
+
+var View_1 = require("./View");
+
+var MenuView =
+/** @class */
+function (_super) {
+  __extends(MenuView, _super);
+
+  function MenuView() {
+    return _super !== null && _super.apply(this, arguments) || this;
+  }
+
+  MenuView.prototype.template = function () {
+    return "\n        <button class='home'>Home</button>\n        <button class='list-users'>List Users</button>\n        ";
+  };
+
+  return MenuView;
+}(View_1.View);
+
+exports.MenuView = MenuView;
+},{"./View":"views/View.ts"}],"index.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var UserForm_1 = require("./views/UserForm");
+var UserEdit_1 = require("./views/UserEdit");
 
 var User_1 = require("./models/User");
 
+var Menu_1 = require("./views/Menu"); // Models
+
+
 var user = User_1.User.buildUser({
-  id: 1,
-  name: "Peter Pan",
+  name: "Something",
   age: 40
-});
-var userForm = new UserForm_1.UserForm(document.getElementById("root"), user);
-userForm.render(); // Object.keys(userTests).forEach((test) => {
+}); // Views
+
+var userEdit = new UserEdit_1.UserEdit(document.getElementById("root"), user);
+var menu = new Menu_1.MenuView(document.querySelector("header")); // Render views
+
+menu.render();
+userEdit.render(); // Object.keys(userTests).forEach((test) => {
 //   userTests[test]();
 // });
 // Object.keys(userCollectionTest).forEach((test) => {
@@ -2383,7 +2748,7 @@ userForm.render(); // Object.keys(userTests).forEach((test) => {
 //   await userTests.testDeleteUsers();
 // }
 // test();
-},{"./views/UserForm":"views/UserForm.ts","./models/User":"models/User.ts"}],"../node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./views/UserEdit":"views/UserEdit.ts","./models/User":"models/User.ts","./views/Menu":"views/Menu.ts"}],"../node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;

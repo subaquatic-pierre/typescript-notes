@@ -1,12 +1,19 @@
 import userTests from "./tests/testUserModel";
 import userCollectionTest from "./tests/testUserCollection";
-import { UserForm } from "./views/UserForm";
+import { UserEdit } from "./views/UserEdit";
 import { User } from "./models/User";
+import { MenuView } from "./views/Menu";
 
-const user = User.buildUser({ id: 1, name: "Peter Pan", age: 40 });
-const userForm = new UserForm(document.getElementById("root"), user);
+// Models
+const user = User.buildUser({ name: "Something", age: 40 });
 
-userForm.render();
+// Views
+const userEdit = new UserEdit(document.getElementById("root"), user);
+const menu = new MenuView(document.querySelector("header"));
+
+// Render views
+menu.render();
+userEdit.render();
 
 // Object.keys(userTests).forEach((test) => {
 //   userTests[test]();
