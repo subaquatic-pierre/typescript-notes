@@ -7,12 +7,16 @@ export class Collection<T, K> {
   constructor(private url: string, private serialize: (json: K) => T) {}
 
   fetch = (): void => {
-    axios.get(this.url).then((res: AxiosResponse) => {
-      res.data.forEach((val: K) => {
-        const user = this.serialize(val);
-        this.models.push(user);
+    axios
+      .get(this.url)
+      .then((res: AxiosResponse) => {
+        res.data.forEach((val: K) => {
+          const user = this.serialize(val);
+          this.models.push(user);
+        });
+      })
+      .then(() => {
+        this.events.trigger("loaded");
       });
-      this.events.trigger("change");
-    });
   };
 }

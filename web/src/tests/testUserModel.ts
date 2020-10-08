@@ -58,17 +58,29 @@ const testFetchUser = async () => {
 };
 
 const testDeleteUser = () => {
-  const user = new User({ name: "Peter Pan", age: 18 });
+  const user = User.buildUser({ id: 1, name: "Peter Pan", age: 18 });
 
-  console.log("Saving user ...");
-  user.save();
+  // console.log("Saving user ...");
+  // user.save();
 
-  console.log("Fetching user ");
-  user.fetch();
-  console.log("User successfully fetched");
+  // console.log("Fetching user ");
+  // user.fetch();
+  // console.log("User successfully fetched");
 
   user.delete();
   console.log("User successfully deleted");
+};
+
+const testDeleteUsers = async () => {
+  const users = User.buildUserCollection();
+
+  users.events.on("loaded", () => {
+    users.models.forEach((user: User) => {
+      user.delete();
+    });
+  });
+
+  users.fetch();
 };
 
 export default {
@@ -78,4 +90,5 @@ export default {
   // testUpdateUser,
   // testFetchUser,
   // testDeleteUser,
+  // testDeleteUsers,
 };
