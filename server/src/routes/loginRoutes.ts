@@ -12,8 +12,8 @@ router.get('/login', (req: Request, res: Response) => {
     <h2>Name</h2>
         <form method='POST'>
             <div>
-                <label for="name">Name (4 to 8 characters):</label>
-                <input type="text" id="name" name="name" >
+                <label for="userName">Name (4 to 8 characters):</label>
+                <input type="text" id="userName" name="userName" >
             </div>
             <div>
                 <label for="password">Password</label>
@@ -26,6 +26,14 @@ router.get('/login', (req: Request, res: Response) => {
 })
 
 router.post('/login', (req: Request, res: Response) => {
+    const {userName, password} = req.body
+    if (userName && password && userName === 'user' && password === 'password') {
+        req.session = {loggedIn: true}
+    } else {
+        res.send(`
+        <h3>Incorrect login credentials</h3>
+        `)
+    }
     console.log(req.body)
     res.redirect('/')
 })
