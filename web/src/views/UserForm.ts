@@ -20,7 +20,9 @@ export class UserForm extends ModelView<User, UserProps> {
   };
 
   onSetNameClick = (): void => {
-    const inputBox: HTMLInputElement = this.parent.querySelector(".input-box");
+    const inputBox: HTMLInputElement = this.parent.querySelector(
+      ".input-box"
+    ) as HTMLInputElement;
     const name = inputBox.value;
     if (name) {
       this.model.set({ name });

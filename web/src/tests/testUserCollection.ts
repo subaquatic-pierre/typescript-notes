@@ -1,15 +1,15 @@
-import { User } from "../models/User";
+// import { User } from "../src/models/User";
 
-const testGetAllUsers = () => {
-  const collection = User.buildUserCollection();
+// const testGetAllUsers = () => {
+//   const collection = User.buildUserCollection();
 
-  collection.events.on("loaded", () => {
-    console.log(collection);
-  });
+//   collection.events.on("loaded", () => {
+//     console.log(collection);
+//   });
 
-  collection.fetch();
-};
+//   collection.fetch();
+// };
 
-export default {
-  testGetAllUsers,
-};
+// export default {
+//   testGetAllUsers,
+// };

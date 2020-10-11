@@ -50,13 +50,13 @@ export class Model<T extends HasId> {
   };
 
   fetch = (): void => {
-    const id = this.attrs.get("id") || undefined;
+    const id = this.attrs.get("id");
     if (!id) {
       throw new Error("Cannot fetch User without an ID");
     }
 
     this.sync
-      .fetch(id)
+      .fetch(id as number)
       .then((res: AxiosResponse): void => {
         this.set(res.data);
       })
@@ -83,7 +83,7 @@ export class Model<T extends HasId> {
       console.log("The user does not exists in the database");
     } else {
       this.sync
-        .delete(id)
+        .delete(id as number)
         .then((res: AxiosResponse) => {
           console.log("User successfully deleted from the database");
           this.events.trigger("delete");

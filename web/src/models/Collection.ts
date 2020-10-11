@@ -1,10 +1,14 @@
 import axios, { AxiosResponse } from "axios";
-import { Eventing } from "./Eventing";
+import { Callback, Eventing } from "./Eventing";
 
 export class Collection<T, K> {
   models: T[] = [];
   events: Eventing = new Eventing();
   constructor(private url: string, private serialize: (json: K) => T) {}
+
+  on = (eventName: string, callback: Callback): void => {
+    this.events.on(eventName, callback);
+  };
 
   fetch = (): void => {
     axios
@@ -16,7 +20,7 @@ export class Collection<T, K> {
         });
       })
       .then(() => {
-        this.events.trigger("loaded");
+        this.events.trigger("change");
       });
   };
 }

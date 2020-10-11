@@ -1,4 +1,3 @@
-import { MenuModel, MenuItems } from "../models/Menu";
 import { View } from "./View";
 
 export class MenuView extends View {
