@@ -1,28 +1,33 @@
-import {Router, Request, Response} from 'express';
+import {Router, Request, Response, NextFunction} from 'express';
 
 const router = Router()
 
-router.get('/', (req: Request, res: Response) => {
-    res.send('<h1>Hello, world!</h1>')
-})
+const authHandler = (req:Request, res:Response, next: NextFunction): void => {
+    if (req.session && req.session.loggedIn){
+        next()
+        return;
+    }
+    else {
+        res.status(403)
+        res.send(`
+            <h2>Permission denied, you are not allowed to view this page</h2>
+        `)
+    }
+}
 
-router.get('/login', (req: Request, res: Response) => {
-    res.send(`
-    <div>
-    <h2>Name</h2>
-        <form method='POST'>
-            <div>
-                <label for="userName">Name (4 to 8 characters):</label>
-                <input type="text" id="userName" name="userName" >
-            </div>
-            <div>
-                <label for="password">Password</label>
-                <input name="password" id="password" type="password" placeholder="Enter your password">
-            </div>
-                <button>Submit</button>
-        </form>
-    </div>
-    `)
+router.get('/', (req: Request, res: Response) => {
+    if (req.session && req.session.loggedIn){
+        res.send(`
+            <h2>Hello User, you are logged in</h2>
+            <a href='/logout'><h3>Logout</h3></a>
+        `)
+    }
+    else {
+        res.send(`
+        <h2>You are not logged in</h2>
+        <a href='/login'><h3>Login</h3></a>
+        `)
+    }
 })
 
 router.post('/login', (req: Request, res: Response) => {
@@ -34,8 +39,20 @@ router.post('/login', (req: Request, res: Response) => {
         <h3>Incorrect login credentials</h3>
         `)
     }
-    console.log(req.body)
     res.redirect('/')
+})
+
+router.get('/logout', (req:Request, res: Response) => {
+    if (req.session && req.session.loggedIn) {
+        req.session = null
+    }
+    res.redirect('/')
+})
+
+router.get('/protected', authHandler, (req:Request, res: Response) => {
+    res.send(`
+    <h2>Welcome to your protected route!</h2>
+    `)
 })
 
 export {router}
