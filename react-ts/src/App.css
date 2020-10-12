@@ -1,0 +1,10 @@
+.todo-div {
+  width: 400px;
+  border: solid blue 2px;
+  padding: 2rem;
+  margin: 1rem;
+}
+
+.todo-div:hover {
+  cursor: pointer;
+}
