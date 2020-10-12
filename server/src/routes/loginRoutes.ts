@@ -1,6 +1,7 @@
-import {Router, Request, Response, NextFunction} from 'express';
+import {Request, Response, NextFunction} from 'express';
+import {AppRouter} from '../AppRouter';
 
-const router = Router()
+const router = AppRouter.getInstance()
 
 const authHandler = (req:Request, res:Response, next: NextFunction): void => {
     if (req.session && req.session.loggedIn){
@@ -56,3 +57,4 @@ router.get('/protected', authHandler, (req:Request, res: Response) => {
 })
 
 export {router}
+
