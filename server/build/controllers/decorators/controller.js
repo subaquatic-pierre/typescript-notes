@@ -4,6 +4,12 @@ exports.router = exports.controller = void 0;
 var AppRouter_1 = require("../../AppRouter");
 var router = AppRouter_1.AppRouter.getInstance();
 exports.router = router;
+/**
+ * @decorator
+ * Decorator from route controller class
+ * Applies the path, middleware and route handler to each route
+ * after looping through all routes with a path
+ */
 function controller() {
     return function (target) {
         for (var key in target.prototype) {

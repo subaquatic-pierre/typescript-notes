@@ -2,6 +2,13 @@ import { AppRouter } from '../../AppRouter';
 
 const router = AppRouter.getInstance()
 
+/**
+ * @decorator
+ * Decorator from route controller class
+ * Applies the path, middleware and route handler to each route
+ * after looping through all routes with a path
+ */
+
 export function controller () {
     return function (target: Function) {
         for (let key in target.prototype) {

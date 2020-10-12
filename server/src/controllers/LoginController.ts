@@ -1,6 +1,11 @@
 import {Request, Response} from 'express'
 import {get, controller} from './decorators';
 
+
+/**
+ * @class Controller class for all auth routes
+ */
+
 @controller()
 class LoginController {    
     @get('/login')

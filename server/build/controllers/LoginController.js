@@ -10,6 +10,9 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var decorators_1 = require("./decorators");
+/**
+ * @class Controller class for all auth routes
+ */
 var LoginController = /** @class */ (function () {
     function LoginController() {
     }
