@@ -8,7 +8,6 @@ var body_parser_1 = __importDefault(require("body-parser"));
 var cookie_session_1 = __importDefault(require("cookie-session"));
 var AppRouter_1 = require("./AppRouter");
 require("./controllers");
-// import {router} from './controllers/decorators/controller'
 var app = express_1.default();
 var router = AppRouter_1.AppRouter.getInstance();
 app.use(body_parser_1.default.urlencoded({ extended: true }));

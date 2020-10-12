@@ -3,7 +3,6 @@ import bodyParser from 'body-parser';
 import cookieSession from 'cookie-session';
 import {AppRouter} from './AppRouter'
 import './controllers'
-// import {router} from './controllers/decorators/controller'
 
 const app = express()
 const router = AppRouter.getInstance()
