@@ -1,4 +1,8 @@
 import { AppRouter } from '../../AppRouter';
+import {MetadataKeys} from './MetadataKeys';
+import { Methods } from './Methods';
+import {validateBody} from './bodyValidator'
+import {validateAuth} from './auth';
 
 const router = AppRouter.getInstance()
 
@@ -14,18 +18,25 @@ export function controller () {
         for (let key in target.prototype) {
             const routeHandler = target.prototype[key]
 
-            const path = Reflect.getMetadata('path', target.prototype, key)
-            const method = Reflect.getMetadata('method', target.prototype, key)
-            // const middleware = Reflect.getMetadata('middleware', target.prototype, key)
+            const path = Reflect.getMetadata(MetadataKeys.path, target.prototype, key)
+            const method: Methods = Reflect.getMetadata(MetadataKeys.method, target.prototype, key)
+
+            // Get middleware array
+            const middlewares = Reflect.getMetadata(MetadataKeys.middleware, target.prototype, key) || []
+
+            const keys = Reflect.getMetadata(MetadataKeys.validator, target.prototype, key)
+            if(keys){
+                middlewares.push(validateBody(keys))
+            }
+            
+            const auth = Reflect.getMetadata(MetadataKeys.auth, target.prototype, key)
+            if(auth) {
+                middlewares.push(validateAuth())
+            }
 
             // Only apply handlers to methods with path metadata
             if (path) {
-                // Check method metadata
-                switch(method) {
-                    case('get') : {
-                        router.get(path, routeHandler)
-                    }
-                }
+                router[method](path, ...middlewares, routeHandler)
             }
         }
     }

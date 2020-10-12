@@ -1,5 +1,5 @@
-import {Request, Response} from 'express'
-import {get, controller} from './decorators';
+import { Request, Response} from 'express'
+import {get, post, controller, auth, bodyValidator} from './decorators';
 
 
 /**
@@ -27,4 +27,26 @@ class LoginController {
         </div>
         `)
     }
+
+    @post('/login')
+    @bodyValidator('password', 'userName')
+    postLogin(req: Request, res: Response) {
+        const {userName, password} = req.body
+        if (userName === 'user' && password === 'password') {
+            req.session = {loggedIn: true}
+        } else {
+            res.send(`
+            <h3>Incorrect login credentials</h3>
+            `)
+        }
+        res.redirect('/')
+    }
+
+    @get('/logout')
+    getLogout(req:Request, res: Response) {
+        if (req.session && req.session.loggedIn) {
+            req.session = null
+        }
+        res.redirect('/')
+    }    
 }

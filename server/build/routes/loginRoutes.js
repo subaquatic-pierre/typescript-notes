@@ -22,22 +22,6 @@ router.get('/', function (req, res) {
         res.send("\n        <h2>You are not logged in</h2>\n        <a href='/login'><h3>Login</h3></a>\n        ");
     }
 });
-router.post('/login', function (req, res) {
-    var _a = req.body, userName = _a.userName, password = _a.password;
-    if (userName && password && userName === 'user' && password === 'password') {
-        req.session = { loggedIn: true };
-    }
-    else {
-        res.send("\n        <h3>Incorrect login credentials</h3>\n        ");
-    }
-    res.redirect('/');
-});
-router.get('/logout', function (req, res) {
-    if (req.session && req.session.loggedIn) {
-        req.session = null;
-    }
-    res.redirect('/');
-});
 router.get('/protected', authHandler, function (req, res) {
     res.send("\n    <h2>Welcome to your protected route!</h2>\n    ");
 });
